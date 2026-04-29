@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>臺中市區豐華分會｜來賓蒞臨會議評議表</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            overscroll-behavior-y: none;
+            background-color: #fafafa;
+        }
+
+        /* 步驟切換動畫設定 */
+        .step-pane { 
+            display: none; 
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .step-pane.active { 
+            display: flex; 
+        }
+        .step-pane.show { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 背景光暈動畫 - 紅黃色系 */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        /* 錯誤震動提示 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* 自訂卷軸 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .other-input-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+        }
+        .other-input-container.open {
+            max-height: 100px;
+            margin-top: 0.75rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden text-gray-800">
+
+    <!-- 動態背景裝飾 (白、紅、黃) -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"></div>
+        <div class="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-1/4 left-1/4 w-1/2 h-1/2 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- 問卷主體卡片 -->
+    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white w-full max-w-2xl overflow-hidden relative z-10 flex flex-col max-h-[90vh]">
+        
+        <!-- 進度條 -->
+        <div id="progress-container" class="w-full bg-gray-100 h-1.5 absolute top-0 left-0 hidden z-20">
+            <div id="progress-bar" class="bg-gradient-to-r from-red-600 to-yellow-400 h-1.5 transition-all duration-500 ease-out rounded-r-full" style="width: 0%;"></div>
+        </div>
+
+        <form id="survey-form" class="flex-grow flex flex-col p-6 sm:p-10 overflow-y-auto" onsubmit="return false;">
+            
+            <!-- 【首頁】 -->
+            <div id="step-0" class="step-pane active show flex-col h-full justify-center text-center my-auto">
+                <div class="mb-8 flex justify-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-red-50 to-yellow-50 rounded-2xl flex items-center justify-center text-red-700 shadow-sm border border-red-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-12 h-12 bg-yellow-400/20 rounded-bl-full"></div>
+                        <i data-lucide="handshake" class="w-12 h-12 relative z-10"></i>
+                    </div>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 tracking-tight">BNI 臺中市區<span class="text-red-700">豐華分會</span></h1>
+                <h2 class="text-xl sm:text-2xl font-medium text-gray-600 mb-6">來賓蒞臨會議評議表</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-red-600 to-yellow-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-600 mb-10 leading-relaxed text-base sm:text-lg max-w-md mx-auto">
+                    非常感謝您抽出時間填寫這份調查問卷，您的寶貴意見與建議，將成為本分會領導團隊持續改善之重要參考，對此我們深表謝意！期待您再次蒞臨成為我們的貴賓！
+                </p>
+                <button type="button" onclick="nextStep()" class="mx-auto bg-red-700 hover:bg-red-800 text-white font-medium py-3.5 px-10 rounded-full shadow-lg shadow-red-700/30 transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-1">
+                    開始填寫 <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- 【Q1: 姓名】 -->
+            <div id="step-1" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Step 1 of 7
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                    一、關於您的姓名：<span class="text-red-500 text-lg">*</span>
+                </h2>
+                
+                <div class="flex-grow mt-6">
+                    <input type="text" id="q1_name" class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-gray-800 bg-gray-50/50 focus:bg-white text-lg" placeholder="請輸入您的真實姓名">
+                </div>
+                
+                <div class="error-message hidden text-red-500 text-sm mt-4 flex items-center gap-1 font-medium">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> 請填寫您的姓名
+                </div>
+
+                <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" onclick="nextStep()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                        下一步 <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【Q2: 是否參加過】 -->
+            <div id="step-2" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Step 2 of 7
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">二、您過去是否有參加過其他BNI分會的例會!? <span class="text-red-500">*</span></h2>
+                
+                <div class="space-y-3 flex-grow">
+                    <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                        <input type="radio" name="q2_attended" value="有" class="peer sr-only">
+                        <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                        <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors text-lg">有</span>
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                    </label>
+                    <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                        <input type="radio" name="q2_attended" value="沒有" class="peer sr-only">
+                        <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                        <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors text-lg">沒有</span>
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                    </label>
+                </div>
+
+                <div class="error-message hidden text-red-500 text-sm mt-4 flex items-center gap-1 font-medium">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> 請選擇一個選項
+                </div>
+
+                <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" onclick="nextStep()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                        下一步 <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【Q3: 差異點 (非必填)】 -->
+            <div id="step-3" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Step 3 of 7
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">三、您感受參加別的分會與豐華分會的最大差異點是!?</h2>
+                <p class="text-gray-500 mb-6 text-sm">（若無參加過其他分會，可留白或填寫無）</p>
+                
+                <div class="flex-grow">
+                    <textarea id="q3_difference" rows="4" class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none transition-all resize-none text-gray-700 bg-gray-50/50 focus:bg-white" placeholder="請簡述您的感受..."></textarea>
+                </div>
+
+                <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" onclick="nextStep()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                        下一步 <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【Q4: 急迫需求 (複選)】 -->
+            <div id="step-4" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Step 4 of 7
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">四、請問在您的事業上有以下哪些急迫的需求呢!? <span class="text-red-500">*</span></h2>
+                <p class="text-gray-500 mb-6 text-sm">（此題為複選，可選擇多項）</p>
+                
+                <div class="space-y-3 flex-grow overflow-y-auto pr-2 pb-2">
+                    <!-- Checkbox Options -->
+                    <script>
+                        const q4Options = [
+                            "非常想要提升業績", "正尋找提升業績的方法", "正尋找有效的人脈", 
+                            "正尋找改變自己的方法", "學習組織運作及領導統御", "學習自我表達", "目前沒有明確需求"
+                        ];
+                        q4Options.forEach((opt, idx) => {
+                            document.write(`
+                            <label class="relative flex items-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 transition-all group">
+                                <input type="checkbox" name="q4_needs" value="${opt}" class="peer sr-only">
+                                <div class="min-w-[1.25rem] w-5 h-5 border-2 border-gray-300 rounded mr-3 peer-checked:border-red-600 peer-checked:bg-red-600 flex items-center justify-center transition-all">
+                                    <svg class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-gray-700 font-medium peer-checked:text-red-800">${opt}</span>
+                                <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50/40 rounded-xl transition-all -z-10"></div>
+                            </label>
+                            `);
+                        });
+                    </script>
+                    
+                    <!-- 其他 (Checkbox) -->
+                    <div class="relative">
+                        <label class="relative flex items-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 transition-all group">
+                            <input type="checkbox" name="q4_needs" value="其他" class="peer sr-only" onchange="toggleOtherInput('q4_other_container', this.checked)">
+                            <div class="min-w-[1.25rem] w-5 h-5 border-2 border-gray-300 rounded mr-3 peer-checked:border-red-600 peer-checked:bg-red-600 flex items-center justify-center transition-all">
+                                <svg class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <span class="text-gray-700 font-medium peer-checked:text-red-800">其他</span>
+                            <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50/40 rounded-xl transition-all -z-10"></div>
+                        </label>
+                        <div id="q4_other_container" class="other-input-container px-1">
+                            <input type="text" id="q4_other_text" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none text-sm" placeholder="請註明其他需求...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="error-message hidden text-red-500 text-sm mt-4 flex items-center gap-1 font-medium">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> 請至少選擇一個選項
+                </div>
+
+                <div class="flex justify-between mt-6 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" onclick="nextStep()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                        下一步 <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【Q5: BNI理念】 -->
+            <div id="step-5" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Step 5 of 7
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">五、今天與會您對BNI理念及運作方式 <span class="text-red-500">*</span></h2>
+                
+                <div class="space-y-3 flex-grow">
+                    <script>
+                        const q5Options = ["非常清楚", "清楚", "普通"];
+                        q5Options.forEach((opt) => {
+                            document.write(`
+                            <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                                <input type="radio" name="q5_understanding" value="${opt}" class="peer sr-only" onchange="toggleOtherInput('q5_other_container', false)">
+                                <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                                <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors text-lg">${opt}</span>
+                                <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                            </label>
+                            `);
+                        });
+                    </script>
+                    
+                    <!-- 其他 (Radio) -->
+                    <div class="relative">
+                        <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                            <input type="radio" name="q5_understanding" value="其他" class="peer sr-only" onchange="toggleOtherInput('q5_other_container', true)">
+                            <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                            <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors text-lg">其他</span>
+                            <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                        </label>
+                        <div id="q5_other_container" class="other-input-container px-1">
+                            <input type="text" id="q5_other_text" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none text-sm" placeholder="請註明...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="error-message hidden text-red-500 text-sm mt-4 flex items-center gap-1 font-medium">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> 請選擇一個選項
+                </div>
+
+                <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" onclick="nextStep()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                        下一步 <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【Q6: 人脈幫助】 -->
+            <div id="step-6" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Step 6 of 7
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">六、您覺得BNI對您的人脈及業務拓展方面是否有幫助!? <span class="text-red-500">*</span></h2>
+                
+                <div class="space-y-3 flex-grow">
+                    <script>
+                        const q6Options = ["非常有幫助", "有幫助", "普通"];
+                        q6Options.forEach((opt) => {
+                            document.write(`
+                            <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                                <input type="radio" name="q6_help" value="${opt}" class="peer sr-only" onchange="toggleOtherInput('q6_other_container', false)">
+                                <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                                <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors text-lg">${opt}</span>
+                                <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                            </label>
+                            `);
+                        });
+                    </script>
+                    
+                    <!-- 其他 (Radio) -->
+                    <div class="relative">
+                        <label class="relative flex items-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                            <input type="radio" name="q6_help" value="其他" class="peer sr-only" onchange="toggleOtherInput('q6_other_container', true)">
+                            <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                            <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors text-lg">其他</span>
+                            <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                        </label>
+                        <div id="q6_other_container" class="other-input-container px-1">
+                            <input type="text" id="q6_other_text" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none text-sm" placeholder="請註明...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="error-message hidden text-red-500 text-sm mt-4 flex items-center gap-1 font-medium">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> 請選擇一個選項
+                </div>
+
+                <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" onclick="nextStep()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                        下一步 <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【Q7: 加入意願】 -->
+            <div id="step-7" class="step-pane flex-col h-full">
+                <div class="mb-3 text-sm font-bold tracking-wider text-red-600 uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span> Final Step
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">七、對於加入豐華分會，成為BNI會員的意願為： <span class="text-red-500">*</span></h2>
+                
+                <div class="space-y-3 flex-grow overflow-y-auto pr-2 pb-2">
+                    <script>
+                        const q7Options = [
+                            "非常有意願，迫不及待想要加入了!!", 
+                            "有意願，可以更進一步來了解。", 
+                            "普通", 
+                            "暫時不需要、但可以保持聯繫!!"
+                        ];
+                        q7Options.forEach((opt) => {
+                            document.write(`
+                            <label class="relative flex items-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                                <input type="radio" name="q7_willingness" value="${opt}" class="peer sr-only" onchange="toggleOtherInput('q7_other_container', false)">
+                                <div class="min-w-[1.25rem] w-5 h-5 border-2 border-gray-300 rounded-full mr-3 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                                <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors">${opt}</span>
+                                <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                            </label>
+                            `);
+                        });
+                    </script>
+                    
+                    <!-- 其他 (Radio) -->
+                    <div class="relative">
+                        <label class="relative flex items-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-red-200 hover:bg-red-50/30 transition-all group">
+                            <input type="radio" name="q7_willingness" value="其他" class="peer sr-only" onchange="toggleOtherInput('q7_other_container', true)">
+                            <div class="min-w-[1.25rem] w-5 h-5 border-2 border-gray-300 rounded-full mr-3 peer-checked:border-red-600 peer-checked:border-[6px] transition-all"></div>
+                            <span class="text-gray-700 font-medium peer-checked:text-red-800 transition-colors">其他</span>
+                            <div class="absolute inset-0 border-2 border-transparent peer-checked:border-red-500 rounded-xl transition-all -z-10"></div>
+                        </label>
+                        <div id="q7_other_container" class="other-input-container px-1">
+                            <input type="text" id="q7_other_text" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-red-500 outline-none text-sm" placeholder="請註明...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="error-message hidden text-red-500 text-sm mt-4 flex items-center gap-1 font-medium">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> 請選擇一個選項
+                </div>
+
+                <div class="flex justify-between mt-6 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="prevStep()" class="text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors">上一步</button>
+                    <button type="button" id="submit-btn" onclick="submitForm()" class="bg-red-700 hover:bg-red-800 text-white font-medium py-2 px-8 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                        送出評議表 <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 【感謝頁面 / 付款資訊】 -->
+            <div id="step-8" class="step-pane flex-col h-full text-gray-800">
+                <div class="text-center mb-6">
+                    <div class="inline-flex w-20 h-20 bg-green-50 border border-green-100 rounded-full items-center justify-center text-green-500 shadow-inner mb-4">
+                        <i data-lucide="check-circle-2" class="w-12 h-12"></i>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">感謝您的回饋!!</h1>
+                    <p class="text-red-700 font-medium text-lg">好的開始是成功的一半。</p>
+                </div>
+                
+                <div class="bg-yellow-50/50 border border-yellow-100 rounded-2xl p-5 sm:p-6 mb-6 text-sm sm:text-base leading-relaxed text-gray-700">
+                    <p class="mb-3">如您有意願加入BNI台中市區豐華分會，彼此鏈結合作，共創雙贏！</p>
+                    <p class="mb-3">我們的入會審查流程是先付款繳納會費，繳納完成後，會由會員委員會來協助您進行產業發展審查及說明BNI理念等流程。</p>
+                    <p class="mb-4">審查通過後，將為您安排授證及導師引導，若是審查未通過，或是您聽完說明，自認為BNI運作不適合也將<span class="font-bold text-red-600">全額退費</span>給您。</p>
+                    
+                    <div class="text-xs text-gray-500 bg-white/60 p-3 rounded-lg border border-gray-100">
+                        ＊國內信用卡退刷免手續費，退刷款將轉為信用卡帳戶溢付款，累積至下期帳單折抵，如申請退還現金，各家信用卡將收手續費；跨行轉帳者需自行負擔轉帳手續費。
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="wallet" class="text-yellow-500 w-5 h-5"></i> 費用說明
+                    </div>
+                    <div class="bg-red-50 border border-red-100 rounded-xl p-4 text-center font-medium text-red-800">
+                        BNI 一年期 26,000 + 註冊費 10,000 元<br>
+                        總共 <span class="text-2xl font-bold ml-1">36,000</span> 元
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 mb-8">
+                    <!-- 刷卡 -->
+                    <div class="border-2 border-gray-100 rounded-xl p-4 hover:border-red-200 transition-colors bg-white">
+                        <div class="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                            <span class="bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">1</span> 刷卡資訊
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">請點擊進入刷卡連結，麻煩在刷卡頁面留下您的email、姓名及電話，刷卡後請截圖交易確認畫面備存，謝謝！</p>
+                        <a href="#" class="inline-block text-center w-full bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium py-2 rounded-lg transition-colors">前往刷卡連結</a>
+                    </div>
+                    
+                    <!-- 匯款 -->
+                    <div class="border-2 border-gray-100 rounded-xl p-4 hover:border-yellow-200 transition-colors bg-white">
+                        <div class="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                            <span class="bg-yellow-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">2</span> 匯款資訊
+                        </div>
+                        <div class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg mb-2 font-mono">
+                            <div class="mb-1 text-gray-500 font-sans text-xs">銀行</div>
+                            <div class="font-bold mb-2">國泰世華 (013)</div>
+                            <div class="mb-1 text-gray-500 font-sans text-xs">帳號</div>
+                            <div class="font-bold mb-2">239035001771</div>
+                            <div class="mb-1 text-gray-500 font-sans text-xs">戶名</div>
+                            <div class="font-bold">康富來國際事業有限公司</div>
+                        </div>
+                        <p class="text-xs text-gray-500">匯款完請回傳帳戶後五碼，方便確認匯款資料</p>
+                    </div>
+                </div>
+
+                <div class="text-center pb-4">
+                    <p class="text-gray-600 mb-2">再次感謝您今日蒞臨來訪，您上述意見將對BNI及本分會具有很棒經驗價值!! 我們深表謝意！</p>
+                    <p class="font-bold text-gray-800 mt-4 text-lg">豐華分會 敬祝您 生意興隆</p>
+                </div>
+                
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // 初始化 Lucide Icons
+        lucide.createIcons();
+
+        // 狀態管理
+        let currentStep = 0;
+        const totalQuestions = 7; // 問題總數 (1~7)
+        let isAnimating = false;
+
+        // 處理「其他」選項的文字框顯示隱藏
+        function toggleOtherInput(containerId, show) {
+            const container = document.getElementById(containerId);
+            if(show) {
+                container.classList.add('open');
+                container.querySelector('input').focus();
+            } else {
+                container.classList.remove('open');
+            }
+        }
+
+        // 切換步驟的邏輯
+        async function showStep(newStep) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const currentPane = document.querySelector('.step-pane.active');
+            const newPane = document.getElementById(`step-${newStep}`);
+
+            // 淡出當前頁面
+            if (currentPane) {
+                currentPane.classList.remove('show');
+                await new Promise(r => setTimeout(r, 400));
+                currentPane.classList.remove('active');
+            }
+
+            // 顯示新頁面並重置卷軸位置
+            newPane.classList.add('active');
+            document.getElementById('survey-form').scrollTop = 0;
+            
+            // 強制瀏覽器重繪
+            void newPane.offsetWidth; 
+            
+            // 淡入新頁面
+            newPane.classList.add('show');
+            
+            // 更新進度條
+            updateProgressBar(newStep);
+            
+            isAnimating = false;
+        }
+
+        // 下一步按鈕
+        function nextStep() {
+            if (validateStep(currentStep)) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        // 上一步按鈕
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // 更新頂部進度條
+        function updateProgressBar(step) {
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            
+            // 首頁(0) 與 感謝頁(8) 隱藏進度條
+            if (step === 0 || step > totalQuestions) {
+                progressContainer.classList.add('hidden');
+            } else {
+                progressContainer.classList.remove('hidden');
+                // 計算百分比
+                const percentage = (step / totalQuestions) * 100;
+                progressBar.style.width = `${percentage}%`;
+            }
+        }
+
+        // 表單驗證邏輯
+        function validateStep(step) {
+            if (step === 0) return true;
+
+            let isValid = true;
+            const stepPane = document.getElementById(`step-${step}`);
+            const errorMessage = stepPane.querySelector('.error-message');
+            
+            switch(step) {
+                case 1: // 姓名
+                    const name = document.getElementById('q1_name').value.trim();
+                    isValid = name.length > 0;
+                    break;
+                case 2: // 是否參加過
+                    isValid = !!stepPane.querySelector('input[type="radio"]:checked');
+                    break;
+                case 3: // 差異點 (非必填)
+                    isValid = true;
+                    break;
+                case 4: // 急迫需求 (複選)
+                    isValid = stepPane.querySelectorAll('input[type="checkbox"]:checked').length > 0;
+                    // 檢查若選了"其他"，文字框是否有填
+                    if(isValid && stepPane.querySelector('input[value="其他"]').checked) {
+                        const otherText = document.getElementById('q4_other_text').value.trim();
+                        if(otherText === "") isValid = false; // 可視需求決定是否嚴格要求
+                    }
+                    break;
+                case 5: // 理念
+                case 6: // 人脈幫助
+                case 7: // 意願
+                    isValid = !!stepPane.querySelector('input[type="radio"]:checked');
+                    break;
+            }
+
+            // 顯示或隱藏錯誤提示，並加入震動特效
+            if (!isValid && errorMessage) {
+                errorMessage.classList.remove('hidden');
+                stepPane.classList.add('animate-shake');
+                setTimeout(() => stepPane.classList.remove('animate-shake'), 400);
+            } else if (errorMessage) {
+                errorMessage.classList.add('hidden');
+            }
+
+            return isValid;
+        }
+
+        // 最終送出表單
+        async function submitForm() {
+            if (!validateStep(7)) return;
+            
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerHTML;
+            
+            // 替換按鈕為 Loading 狀態
+            btn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg> 
+                處理中...`;
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+
+            // 模擬 API 傳送時間
+            await new Promise(r => setTimeout(r, 1200));
+            
+            // 跳轉至感謝與付款資訊頁 (Step 8)
+            currentStep = 8;
+            showStep(currentStep);
+        }
+    </script>
+</body>
+</html>
