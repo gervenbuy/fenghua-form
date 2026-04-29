@@ -597,7 +597,7 @@
             return isValid;
         }
 
-        // 最終送出表單
+        // 最終送出表單至 Google Sheet
         async function submitForm() {
             if (!validateStep(7)) return;
             
@@ -610,16 +610,81 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg> 
-                處理中...`;
+                傳送中...`;
             btn.disabled = true;
             btn.classList.add('opacity-80', 'cursor-not-allowed');
 
-            // 模擬 API 傳送時間
-            await new Promise(r => setTimeout(r, 1200));
+            // 收集所有欄位資料
+            const q1 = document.getElementById('q1_name').value.trim();
+            const q2 = document.querySelector('input[name="q2_attended"]:checked')?.value || "";
+            const q3 = document.getElementById('q3_difference').value.trim();
             
-            // 跳轉至感謝與付款資訊頁 (Step 8)
-            currentStep = 8;
-            showStep(currentStep);
+            // 處理第四題：多選與「其他」選項
+            let q4Array = [];
+            document.querySelectorAll('input[name="q4_needs"]:checked').forEach(cb => {
+                if(cb.value === "其他") {
+                    q4Array.push("其他: " + document.getElementById('q4_other_text').value.trim());
+                } else {
+                    q4Array.push(cb.value);
+                }
+            });
+            const q4 = q4Array.join("、"); // 陣列轉字串
+            
+            // 處理第五題：單選與「其他」選項
+            let q5 = document.querySelector('input[name="q5_understanding"]:checked')?.value || "";
+            if (q5 === "其他") q5 = "其他: " + document.getElementById('q5_other_text').value.trim();
+            
+            // 處理第六題：單選與「其他」選項
+            let q6 = document.querySelector('input[name="q6_help"]:checked')?.value || "";
+            if (q6 === "其他") q6 = "其他: " + document.getElementById('q6_other_text').value.trim();
+            
+            // 處理第七題：單選與「其他」選項
+            let q7 = document.querySelector('input[name="q7_willingness"]:checked')?.value || "";
+            if (q7 === "其他") q7 = "其他: " + document.getElementById('q7_other_text').value.trim();
+
+            const formData = {
+                q1_name: q1,
+                q2_attended: q2,
+                q3_difference: q3,
+                q4_needs: q4,
+                q5_understanding: q5,
+                q6_help: q6,
+                q7_willingness: q7
+            };
+
+            // ⚠️ 【非常重要】已經替換為您部署的 Google Apps Script Web App URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxHq39MWja_GLlcpAL1ugMacFGsAl97UpziTtu3U5ikcmrtue4KyAfnKQag0SXXjvf3/exec'; 
+
+            try {
+                if (scriptURL.includes('請將您的')) {
+                    // 如果還沒設定網址，先給一個模擬的等待時間，方便您在預覽時測試介面
+                    console.warn('提醒：請將 scriptURL 替換為真實的 Web App URL');
+                    await new Promise(r => setTimeout(r, 1200));
+                } else {
+                    // 實際發送資料到 Google Sheet
+                    const response = await fetch(scriptURL, {
+                        method: 'POST',
+                        body: JSON.stringify(formData)
+                    });
+                    const result = await response.json();
+                    if(result.status !== 'success') {
+                        throw new Error(result.message);
+                    }
+                }
+                
+                // 跳轉至感謝與付款資訊頁 (Step 8)
+                currentStep = 8;
+                showStep(currentStep);
+
+            } catch (error) {
+                console.error('Error!', error.message);
+                alert("送出失敗，請檢查網路連線或稍後再試！");
+                
+                // 恢復按鈕狀態
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+            }
         }
     </script>
 </body>
