@@ -7,7 +7,7 @@
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <!-- 引入 Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -425,9 +425,27 @@
                     <div class="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
                         <i data-lucide="wallet" class="text-yellow-500 w-5 h-5"></i> 費用說明
                     </div>
-                    <div class="bg-red-50 border border-red-100 rounded-xl p-4 text-center font-medium text-red-800">
-                        BNI 一年期 26,000 + 註冊費 10,000 元<br>
-                        總共 <span class="text-2xl font-bold ml-1">36,000</span> 元
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden transition-all hover:shadow-md">
+                        <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-4 text-center relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+                            <div class="text-2xl sm:text-3xl font-black opacity-100 mb-1 tracking-wider relative z-10">在 BNI</div>
+                            <div class="text-lg sm:text-xl font-bold tracking-wide relative z-10">多少錢可以讓你做生意到全世界？</div>
+                        </div>
+                        <div class="p-5 sm:p-6 space-y-4">
+                            <div class="flex justify-between items-center text-gray-700">
+                                <span class="font-medium text-lg">註冊費</span>
+                                <span class="text-xl font-bold tracking-wider">13,000 <span class="text-sm text-gray-500 font-normal">元</span></span>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-700">
+                                <span class="font-medium text-lg">會員年費</span>
+                                <span class="text-xl font-bold tracking-wider">26,800 <span class="text-sm text-gray-500 font-normal">元</span></span>
+                            </div>
+                            <div class="border-t-2 border-dashed border-gray-200 my-2"></div>
+                            <div class="flex justify-between items-end pt-1">
+                                <span class="font-bold text-gray-900 text-lg mb-1">首年年費合計</span>
+                                <span class="text-red-600 font-bold text-3xl tracking-tight">39,800 <span class="text-base font-medium text-red-500">元</span></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
